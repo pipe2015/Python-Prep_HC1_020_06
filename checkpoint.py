@@ -1,5 +1,6 @@
 # Importante: No modificar ni el nombre ni los argumetos que reciben las funciones, sólo deben escribir
 # código dentro de las funciones ya definidas.
+import math
 
 def ListaDivisibles(numero, tope):
     '''
@@ -13,8 +14,14 @@ def ListaDivisibles(numero, tope):
         ListaDivisibles(10,5) debe retornar []
         ListaDivisibles(7,50) debe retornar [7,14,21,28,35,42,49]
     '''
-    #Tu código aca:
-    return 'Funcion incompleta'
+    list_numbers_divisibles = [];
+    if tope < numero: return list_numbers_divisibles;
+    
+    for nDisisible in range(tope + 1):
+        if (not (numero + nDisisible) % numero and numero + nDisisible <= tope):
+            list_numbers_divisibles.append(numero + nDisisible)
+    
+    return list_numbers_divisibles;
 
 def Exponente(numero, exponente):
     '''
@@ -25,8 +32,24 @@ def Exponente(numero, exponente):
     Ej:
         Exponente(10,3) debe retornar 1000
     '''
-    #Tu código aca:
-    return 'Funcion incompleta'
+    if exponente == 0: return 1;
+    if exponente == 1 : return numero;
+    if exponente > 1 :
+        expo = 1
+        res = numero
+        while expo < exponente:
+            res *= numero
+            expo += 1
+    
+    if math.floor(exponente) != exponente: # if is decimal expot
+        res = pow(numero, exponente)
+    
+    if exponente < 0 : # exponente negative
+        exponente *= -1 # if is negative change positive
+        num = 1 / numero 
+        res = Exponente(num, exponente);
+    
+    return res;
 
 def ListaDeListas(lista):
     '''
@@ -41,8 +64,17 @@ def ListaDeListas(lista):
         ListaDeListas(108) debe retornar el valor nulo.
         ListaDeListas([[1,2,[3]],[4]]) debe retornar [1,2,3,4]
     '''
-    #Tu código aca:
-    return 'Funcion incompleta'
+    if type(lista) is not list: return None
+    # algoritmo recursive
+    result = [] # list matrix data values
+    
+    for i in range(len(lista)): 
+        if (type(lista[i]) is list): # de matrix a array add
+            result.extend(ListaDeListas(lista[i]))
+            continue
+        result.append(lista[i])
+    
+    return result
 
 def Factorial(numero):
     '''
@@ -55,8 +87,8 @@ def Factorial(numero):
         Factorial(-2) debe retornar nulo
         Factorial(0) debe retornar 1
     '''
-    #Tu código aca:
-    return 'Funcion incompleta'
+    if not numero: return 1
+    return numero * Factorial(numero - 1)
 
 def ListaPrimos(desde, hasta):
     '''
@@ -73,8 +105,25 @@ def ListaPrimos(desde, hasta):
         ListaPrimos(100,99) debe retornar []
         ListaPrimos(1,7) debe retonan [1,2,3,5,7]
     '''
-    #Tu código aca:
-    return 'Funcion incompleta'
+    if not (type(desde) is int and type(hasta) is int) : return None;
+    # range n primos recurvive algoritmo
+    
+    def rangePrimos(nPrimo, nMaxPrimo = 0, data = []):
+        result = [];
+        isPrimo = True;
+        
+        i = 2;
+        while nPrimo > i and i < nPrimo: # calculate is primo range, > 2 and < nPrimo - 1
+            if(math.floor(nPrimo / i) == nPrimo / i):
+                isPrimo = False;
+                break;
+            i += 1; 
+
+        if (nPrimo == 1 or nPrimo > 1) and isPrimo : result.append(nPrimo)
+        if (nPrimo < nMaxPrimo): result.extend(rangePrimos(nPrimo + 1, nMaxPrimo, []));
+        return result;
+    
+    return rangePrimos(desde, hasta);
 
 def ListaRepetidos(lista):
     '''
@@ -91,8 +140,25 @@ def ListaRepetidos(lista):
             debe retornar [('hola',2),('mundo',1),(13,1),(14,1)]
         ListaRepetidos([1,2,2,4]) debe retornar [(1,1),(2,2),(4,1)]
     '''
-    #Tu código aca:
-    return 'Funcion incompleta'
+    result = [];
+    if type(lista) is not list: return None; 
+    if not len(lista): return result;
+
+    for i in range(len(lista) - 1):
+        first_value = lista[i]
+        count_values = 1
+        serach = False
+        
+        if (len(result)): 
+            for ifind in range(len(result)):
+                if first_value == result[ifind][0]: serach = True
+        if not serach:
+            for j in range(len(lista) - (i + 1)):
+                if first_value == lista[i + (j + 1)]: count_values += 1
+
+            result.append((first_value, count_values));
+    
+    return result
 
 def ClaseVehiculo(tipo, color):
     '''
@@ -115,8 +181,18 @@ def ClaseVehiculo(tipo, color):
         a.Acelerar(15) -> debe devolver 25
         a.Acelerar(-10) -> debe devolver 15
     '''
-    #Tu código aca:
-    return 'Funcion incompleta'
+    class ClaseVehículo() :
+        
+        def __init__(self, tipo, color):
+            self.tipo = tipo
+            self.color = color
+            self.velocidad = 0
+            
+        def Acelerar(self, inc):
+            self.velocidad = max(0, min(self.velocidad + inc, 100)) 
+            return self.velocidad
+            
+    return ClaseVehículo(tipo, color)
 
 def OrdenarDiccionario(diccionario_par, clave, descendente=True):
     '''
@@ -144,5 +220,46 @@ def OrdenarDiccionario(diccionario_par, clave, descendente=True):
                                                                 'clave2':['barco','auto','casa'],
                                                                 'clave3':[3,2,1]}
     '''
-    #Tu código aca:
-    return 'Funcion incompleta'   
+    if not (type(diccionario_par) is dict): return None;
+    if not (clave in diccionario_par) : return None;
+    
+    # descendente < mayor a menor, ascendente menor a mayor
+    result = {}
+    
+    def list_sorted (list_sorted, descendente=True):
+        for i in range(len(list_sorted)):
+            for j in range(len(list_sorted) - 1):
+                if (descendente == True and list_sorted[j] > list_sorted[j + 1]) or (descendente == False and list_sorted[j] < list_sorted[j + 1]):
+                    temp = list_sorted[j]
+                    list_sorted[j] = list_sorted[j + 1]
+                    list_sorted[j + 1] = temp
+        
+        return list_sorted
+    
+    def getValuesKeyOrder(list_order, f_clave): # lorder : ['a','b','c'], clave2
+        list_key_values = []
+        
+        for i in range(len(list_order)): 
+            list_clave_default = diccionario_par[clave]
+            list_clave = diccionario_par[f_clave]
+
+            index = list_clave_default.index(list_order[i]) # 1
+            list_key_values.append(list_clave[index])
+        
+        return list_key_values
+    
+    def getSortedkeys(result):
+        res = {}
+        sorted_list = sorted(result);
+        for i in range(len(sorted_list)):
+            res[sorted_list[i]] = result[sorted_list[i]]
+        
+        return res
+    
+    result[clave] = list_sorted(diccionario_par[clave].copy(), descendente)
+    for key in diccionario_par:
+        if key != clave: 
+            result[key] = getValuesKeyOrder(result[clave], key)
+    
+    #sort clave dict
+    return getSortedkeys(result) 
