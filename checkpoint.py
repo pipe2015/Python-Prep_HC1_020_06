@@ -114,7 +114,7 @@ def ListaPrimos(desde, hasta):
         
         i = 2;
         while nPrimo > i and i < nPrimo: # calculate is primo range, > 2 and < nPrimo - 1
-            if(math.floor(nPrimo / i) == nPrimo / i):
+            if not nPrimo % i:
                 isPrimo = False;
                 break;
             i += 1; 
